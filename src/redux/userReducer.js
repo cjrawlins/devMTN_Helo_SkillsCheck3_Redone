@@ -6,15 +6,25 @@ const initialState = {
         username: 'user',
         profilePic: "http://baypoint.academy/wp-content/uploads/2017/01/dummy-profile-pic-300x300.jpg",
         loggedIn: false
-    }
+    },
+    posts: []
+    // posts: {
+    //     id: 0,
+    //     title: 'blank',
+    //     img:  "http://robohash.org/2",
+    //     content: "blank",
+    //     author_id: 13  
+    // }
 }
 
-// Action Names
+// Action Types
 const LOGIN_USER = 'LOGIN_USER';
 const LOGOUT_USER = 'LOGOUT_USER';
 const GET_USER = 'GET_USER';
 
-// Redux Actions
+const GET_ALL_POSTS = 'GET_ALL_POSTS'
+
+// Redux Creators
 export function loginUser(user) {
     return {
         type: LOGIN_USER,
@@ -39,6 +49,15 @@ export function getUser() {
 }
 
 
+export function getAllPosts(posts) {
+    //console.log("Action GetAllPosts: ", posts);
+    return {
+        type: GET_ALL_POSTS,
+        payload: posts
+    }
+}
+
+
 // Reducer Function
 export default function reducer(state = initialState, action) {
     switch(action.type) {
@@ -52,6 +71,8 @@ export default function reducer(state = initialState, action) {
                 return { ...state, user: action.payload.data,}
         case GET_USER + "_REJECTED":
             return initialState
+        case GET_ALL_POSTS:
+            return { ...state, posts: action.payload }
         default: 
             return initialState
     }

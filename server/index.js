@@ -4,6 +4,7 @@ const express = require('express');
 const session = require('express-session');
 const massive = require('massive');
 const ctrl = require('./controllers/authController');
+const postCtrl = require('./controllers/postController');
 
 // Create instance app from express
 const app = express();
@@ -42,7 +43,7 @@ massive({
     app.get('/api/auth/getuser', ctrl.getUser);
 
     // Posts //
-    //app.get('/api/auth/user', ctrl.getUser);
+    app.get('/api/posts', postCtrl.getAllPosts);
 
 //Set up server to listen on port and log
 app.listen(SERVER_PORT, () => {

@@ -26,14 +26,15 @@ class Dashboard extends Component {
         this.getPostsToRender();
     }
 
-    componentDidMount() {
+    componentDidMount = () => {
         this.props.getUser();
         //console.log("Dash CompDidMnt Post State: ", this.state.posts);
       }
 
     getPostsToRender = () => {
         //console.log("Get All Posts Called in Dash", this.props);
-        axios.get("/api/posts")
+        axios
+            .get("/api/posts")
             .then( res => {
                 this.setState( { posts: res.data } );
                 //console.log("Get Posts", res.data);
@@ -49,9 +50,9 @@ class Dashboard extends Component {
         //console.log("Dash Render Post State: ", this.state.posts);
         const mapPosts = this.state.posts.map( function(curr, index) {
             return( 
-                    <Link key={index} to={`/post/${curr.id}`}>
-                       <div className="Post">
-                             <h1 className="post-text">{curr.title}</h1>
+                    <Link key={index} to={`/post/${curr.id}`} >
+                       <div className="dash-post-list">
+                             <h1 className="post-title">{curr.title}</h1>
                              <div className="post-profile-container">
                                 <h3>{curr.username}</h3>
                                 <img className="post-profile-image" src={curr.profile_pic} alt="#"/>

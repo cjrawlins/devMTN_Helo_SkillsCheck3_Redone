@@ -46,6 +46,9 @@ massive({
     app.get('/api/posts', postCtrl.getAllPosts);
     app.get('/api/post/:id', postCtrl.getPost);
     app.post('/api/post', postCtrl.createPost);
+    app.put('/api/post/:id', postCtrl.editPost);
+    app.delete('/api/post/:id', postCtrl.deletePost);
+    app.get('/api/search:?', postCtrl.searchPostTitle);
 
 //Set up server to listen on port and log
 app.listen(SERVER_PORT, () => {

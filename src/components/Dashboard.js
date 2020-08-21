@@ -20,34 +20,57 @@ class Dashboard extends Component {
                 username: reduxState.user.username,
                 profilePic: reduxState.user.profilePic
             },
-            posts: reduxState.posts
-
+            posts: reduxState.posts,
+            postFilteredByUser: false,
+            searchInput: ''
         }
-        this.getPostsToRender();
     }
 
     componentDidMount = () => {
-        this.props.getUser();
-        //console.log("Dash CompDidMnt Post State: ", this.state.posts);
+        this.getAllPosts();
       }
 
-    getPostsToRender = () => {
-        //console.log("Get All Posts Called in Dash", this.props);
-        axios
+    getAllPosts = () => {
+        if ( this.state.user.id > 0 ) {
+            axios
             .get("/api/posts")
             .then( res => {
-                this.setState( { posts: res.data } );
-                //console.log("Get Posts", res.data);
+                this.setState( { posts: res.data, postFilteredByUser: false } );
                 this.props.getAllPosts(res.data);
             } )
             .catch( err => console.log( "Error: ", err )
             )
-    }
+        }
+      }
+
+    filterPostByUser = () => {
+          if (!this.state.postFilteredByUser) {
+            const filteredPosts = this.state.posts.filter( e => {
+                return e.author_id === this.state.user.id;
+            } )
+            this.setState( { posts: filteredPosts, postFilteredByUser: true } );
+          } else {
+            this.getAllPosts();
+          }
+      }
+
+      handleInput(e) {
+        this.setState({ [e.target.name]: e.target.value })
+      }
+
+      searchTitle = () => {
+        console.log("Search Title Called: ");
+        axios
+            .get(`/api/search/?title=${this.state.searchInput}`)
+            .then( res => {
+                this.setState( { posts: res.data, } );
+            } )
+            .catch( err => console.log( "Error: ", err )
+            )
+      }
 
 
     render() {
-        // let postMap =
-        //console.log("Dash Render Post State: ", this.state.posts);
         const mapPosts = this.state.posts.map( function(curr, index) {
             return( 
                     <Link key={index} to={`/post/${curr.id}`} >
@@ -66,13 +89,15 @@ class Dashboard extends Component {
             <div className="Dashboard">
                 <div className="dash dash-search-container">
                     <div className="dash-search-input-container">
-                        <input className="dash-search-input" 
-                            placeholder="Search by Title" 
-                            ></input>
-                        <img className="dash-search-button" src="./media/search_logo.png" alt="#" ></img>
-                        <button className="dash-reset-button">Reset</button>
+                        <input className="dash-search-input" placeholder="Search by Title"
+                            name="searchInput" onChange={ e => this.handleInput(e)}
+                        />
+                        <img className="dash-search-button" src="./media/search_logo.png" alt="#"
+                            onClick={this.searchTitle}
+                        />
+                        <button className="dash-reset-button" onClick={this.getAllPosts} >Reset</button>
                     </div>
-                    <div className="dash-checkbox-container">
+                    <div className="dash-checkbox-container" onChange={this.filterPostByUser} >
                         <p>My Posts</p>
                         <input type="checkbox" id="checkbox-my-posts"/>
                     </div>

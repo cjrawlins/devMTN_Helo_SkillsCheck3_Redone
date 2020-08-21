@@ -12,7 +12,7 @@ class Form extends Component {
 
         this.state = {
             title: '',
-            img: '',
+            img: './media/no_image.jpg',
             content: '',
             user: {
                 id: reduxState.user.id
@@ -39,15 +39,14 @@ class Form extends Component {
                 <div className="form-main-container">
                     <h1 className="form-label post-title">New Post</h1>
                     <input onChange={ e => this.handleInput(e)} className="form-input" type="text" name="title" placeholder="Enter Post Title" />
-                    <img className="form-image" src={this.state.img} alt="#"/>
+                    <img className="form-image" src={this.state.img} alt="Not Found"/>
                     <input onChange={ e => this.handleInput(e)} className="form-input" type="text" name="img" placeholder="Enter Post Image URL" />
-                    <input onChange={ e => this.handleInput(e)} className="form-input" type="text" name="content" placeholder="Enter Post Content" />
+                    <textarea onChange={ e => this.handleInput(e)} className="form-textarea" type="text" name="content" placeholder="Enter Post Content" rows="40" cols="50" />
                     <button onClick={this.handleSubmit} className="form-post-button">Post</button>
                 </div>
             </div>
         );
     }
-
 }
 
 const mapStateToProps = state => state;

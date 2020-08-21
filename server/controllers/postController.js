@@ -16,7 +16,7 @@ module.exports = {
         console.log("Get Post Called");
         const db = req.app.get('db');
         const id = +req.params.id;
-       console.log("Req Params", id);
+        console.log("Req Params", id);
         await db.get_post( [id] ).then( post => {
             res.status(200).send( post )
             console.log("Sending: ", post);
@@ -34,5 +34,45 @@ module.exports = {
         console.log(req.body);
         await db.create_post( req.body )
         res.status(200).send("Post Sent OK")
+    },
+
+    editPost: async (req, res) => {
+
+    },
+
+    deletePost: async (req, res) => {
+        console.log("Delete Post Called");
+        const db = req.app.get('db');
+        const id = +req.params.id;
+        console.log("Req Params", id);
+        await db.delete_post( [id] )
+            .then( posts => {
+                res.status(200).send( posts )
+                //console.log("Sending: ", posts);
+            } )
+            .catch(err => {
+                res.status(500).send({ errorMessage: `Error Deleting Post ID: ${id}`});
+                console.log(err)
+        });
+    
+    },
+
+    searchPostTitle: async (req, res) => {
+        console.log("Title Query Called");
+        const db = req.app.get('db');
+        const searchTerm = req.query.title;
+        const queryTerm = `%${searchTerm}%`;
+        console.log("Query: ", queryTerm);
+        await db.search_title( [ queryTerm ] )
+            .then( posts => {
+                res.status(200).send( posts )
+                console.log("Returning: ", posts)
+            })
+            .catch(err => {
+                res.status(500).send({ errorMessage: "Error Finding Title"});
+                console.log(err)
+            });
     }
+
+
 }

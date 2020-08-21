@@ -8,13 +8,6 @@ const initialState = {
         loggedIn: false
     },
     posts: []
-    // posts: {
-    //     id: 0,
-    //     title: 'blank',
-    //     img:  "http://robohash.org/2",
-    //     content: "blank",
-    //     author_id: 13  
-    // }
 }
 
 // Action Types

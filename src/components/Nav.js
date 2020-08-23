@@ -34,7 +34,7 @@ class Nav extends Component {
 
     render() {
 
-        const {id, username, profilePic} = this.state.user;
+        const { username, profilePic } = this.state.user;
 
         return(
             <div className="Nav">
@@ -42,7 +42,6 @@ class Nav extends Component {
                     <div className="nav-profile-container">
                         <img className="nav-profile-image" alt="profile" src={profilePic}/>
                         <p className="nav-profile-name">{username}</p>
-                        <p className="nav-profile-name">{id}</p>
                     </div>
                     <Link to="/dashboard">
                     <img className="nav-link-images" src="./media/home_logo.png" alt="./media/no_image.png" />

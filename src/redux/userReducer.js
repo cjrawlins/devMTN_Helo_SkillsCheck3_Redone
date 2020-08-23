@@ -3,7 +3,7 @@ import axios from 'axios';
 const initialState = {
     user: {
         id: 0,
-        username: 'user',
+        username: '',
         profilePic: "http://baypoint.academy/wp-content/uploads/2017/01/dummy-profile-pic-300x300.jpg",
         loggedIn: false
     },

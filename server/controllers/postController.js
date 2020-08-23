@@ -16,7 +16,6 @@ module.exports = {
         console.log("Get Post Called");
         const db = req.app.get('db');
         const id = +req.params.id;
-        console.log("Req Params", id);
         await db.get_post( [id] ).then( post => {
             res.status(200).send( post )
             console.log("Sending: ", post);
@@ -31,20 +30,23 @@ module.exports = {
         console.log("Create Post Called");
         const db = req.app.get('db');
         const { title, img, content, author_id } = req.body;
-        console.log(req.body);
         await db.create_post( req.body )
         res.status(200).send("Post Sent OK")
     },
 
     editPost: async (req, res) => {
-
+        console.log("Edit Post Called");
+        const db = req.app.get('db');
+        const [ title, img, content ] = req.body;
+        const id = +req.params.id;
+        await db.edit_post( [id, title, img, content] )
+            res.status(200).send("Post Sent OK")
     },
 
     deletePost: async (req, res) => {
         console.log("Delete Post Called");
         const db = req.app.get('db');
         const id = +req.params.id;
-        console.log("Req Params", id);
         await db.delete_post( [id] )
             .then( posts => {
                 res.status(200).send( posts )
@@ -62,7 +64,6 @@ module.exports = {
         const db = req.app.get('db');
         const searchTerm = req.query.title;
         const queryTerm = `%${searchTerm}%`;
-        console.log("Query: ", queryTerm);
         await db.search_title( [ queryTerm ] )
             .then( posts => {
                 res.status(200).send( posts )
@@ -73,6 +74,4 @@ module.exports = {
                 console.log(err)
             });
     }
-
-
 }

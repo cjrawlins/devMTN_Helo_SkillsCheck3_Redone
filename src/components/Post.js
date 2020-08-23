@@ -19,21 +19,18 @@ class Post extends Component {
             img: "",
             content: "",
             author: "",
-            authorPicture: ""
+            authorPicture: "",
+            editToggle: false
         }
     }
 
     componentDidMount = () => {
         let postId = +this.props.location.pathname.slice(6);
-        console.log("CompDidMount PostId: ", postId);
         axios
             .get(`/api/post/${postId}`, {
-                params: {
-                    id: postId
-                }
+                params: {id: postId}
             })
             .then( res => {
-                console.log(res.data[0])
                 this.setState( {
                     postId: res.data[0].id,
                     title: res.data[0].title,
@@ -49,19 +46,59 @@ class Post extends Component {
 
     deletePost = () => {
         let postId =  this.state.postId;
-        console.log("Deleting Post: ", postId);
-        axios.delete(`/api/post/${postId}`, {
-            params: {
-                id: postId
-            }
-        })
-        .catch( err => console.log( "Error deleting Post: ", err ))
+        axios
+            .delete(`/api/post/${postId}`, {
+                params: {
+                    id: postId
+                }
+            })
+            .catch( err => console.log( "Error deleting Post: ", err ))
+    }
+
+    handleEditSave = () => {
+        let postId =  this.state.postId;
+        axios
+            .put(`/api/post/${postId}`, [ this.state.title, this.state.img, this.state.content ] )
+            .catch( err => console.log( "Error Editing Post: ", err ))
+    }
+
+    handleInput(e) {
+        this.setState({ [e.target.name]: e.target.value })
     }
 
     render() {
 
         return(
             <div className="Post">
+                {this.state.editToggle ? 
+                <main className="post-main-container">
+                    <div className="post-top-container">
+                        <input className="post-title edit" onChange={ e => this.handleInput(e)} name="title" value={this.state.title}/>
+                        <div className="post-profile-container">
+                            <h3>{this.state.author}</h3>
+                            <img className="post-profile-image" src={this.state.authorPicture} alt="#"/>
+                        </div>
+                    </div>
+                    <div className="post-bottom-container">
+                        <div className="post-bottom-image-container">
+                            <img className="post-image" src={this.state.img} alt="#"/>
+                            <input className="post-image edit" onChange={ e => this.handleInput(e)} name="img" value={this.state.img}/>
+                        </div>
+                        <div className="post-bottom-text-container">
+                            <textarea className="post-text post-text-edit" onChange={ e => this.handleInput(e)} name="content" value={this.state.content}/>
+                        </div>
+                    </div>
+                    {this.state.userId === this.state.authorId ?
+                    <div className="post-button-container">
+                        <button className="post-button" onClick={this.handleEditSave}>Save Edit</button> 
+                        <Link to="/dashboard">
+                            <button className="post-button" onClick={() => this.setState({ editToggle: false })}>Cancel Edit</button> 
+                            <button className="post-button" onClick={this.deletePost}>Delete Post</button> 
+                        </Link>
+                    </div>
+                    : null }
+                </main>
+                :
                 <main className="post-main-container">
                     <div className="post-top-container">
                         <h1 className="post-title">{this.state.title}</h1>
@@ -79,12 +116,16 @@ class Post extends Component {
                         </div>
                     </div>
                     {this.state.userId === this.state.authorId ?
-                    <Link to="/dashboard">
-                        <button className="post-delete-button" onClick={this.deletePost}>Delete Post</button> 
-                    </Link>
-                    : null
-                    }
+                        <div className="post-button-container">
+                            <button className="post-button" onClick={() => this.setState({ editToggle: true })}>Edit</button> 
+                            <Link to="/dashboard">
+                                <button className="post-button" onClick={this.deletePost}>Delete Post</button> 
+                            </Link>
+                        </div>
+                    : null }
                 </main>
+                }
+
             </div>
         );
     }
